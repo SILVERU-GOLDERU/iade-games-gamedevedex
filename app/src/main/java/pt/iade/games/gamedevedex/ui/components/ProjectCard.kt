@@ -10,32 +10,30 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import pt.iade.games.gamedevedex.ProjectDetailActivity
 import pt.iade.games.gamedevedex.R
 import pt.iade.games.gamedevedex.models.Project
-import pt.iade.games.gamedevedex.models.Student
-import java.net.URI
+
 
 @Composable
 fun ProjectCard(
@@ -49,9 +47,10 @@ fun ProjectCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         onClick = {
-            Toast.makeText(context, project.title,
-                Toast.LENGTH_SHORT).show()
-            val intent = Intent(context, ProjectDetailActivity::class.java)
+            Toast.makeText(context, project.title, Toast.LENGTH_SHORT).show()
+            val intent = Intent(context, ProjectDetailActivity::class.java).apply {
+                putExtra("project_data", project) // Pass the project data
+            }
             context.startActivity(intent)
         }
     ) {
@@ -60,22 +59,51 @@ fun ProjectCard(
                 .height(200.dp)
                 .fillMaxWidth()
         ) {
-            AsyncImage(
-                model = project.assets[0].toString(),
-                placeholder = painterResource(R.drawable.placeholder_cover_image),
-                contentDescription = "Cover image of the game",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
+            when (project.id) {
+                69 -> {
+                    // Fetch Freedom background
+                    Image(
+                        painter = painterResource(id = R.drawable.husky),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(12.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                404 -> {
 
+                    Image(
+                        painter = painterResource(id = R.drawable.foot),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(12.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                else -> {
+                    // Default placeholder background
+                    Image(
+                        painter = painterResource(id = R.drawable.road_to_brazil_2014),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(12.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
             Column(
                 modifier = Modifier.padding(10.dp)
             ) {
                 Text(
                     text = "$votes",
-                    fontSize = 17.sp,
-                    color = Color(255, 255, 255)
+                    fontSize = 25.sp,
+                    color = Color(250, 250, 250),
+                    fontWeight = FontWeight.Bold, // Make it bold
                 )
+
             }
         }
 
@@ -104,55 +132,3 @@ fun ProjectCard(
     }
 }
 
-@Composable
-@Preview()
-fun ProjectCardPreview() {
-    Column {
-        ProjectCard(
-            modifier = Modifier.padding(vertical = 20.dp),
-            project = Project(
-                title = "Among Us",
-                votes = 2,
-                description = "Super sus.",
-                id = 404,
-                semester = 1,
-                assets = listOf(
-                    URI.create("https://cdn.mobygames.com/screenshots/12341377-among-us-windows-calling-an-emergency-meeting.png"),
-                    URI.create("https://lutris.net/media/games/screenshots/ss_649e19ff657fa518d4c2b45bed7ffdc4264a4b3a.jpg")
-                ),
-                groupMembers = listOf(
-                    Student(
-                        id = 123,
-                        name = "João Pedro",
-                        biography = "Love playing Valorant. Currently thinking of switching courses.",
-                        mood = "Lucky",
-                        avatar = URI.create("https://media.gettyimages.com/photos/cristiano-ronaldo-of-portugal-poses-during-the-official-fifa-world-picture-id450555852?k=6&m=450555852&s=612x612&w=0&h=aUh0DVio_ubpFtCVvMv3WLR1MVPQji1sN5PDNKvHCT4=")
-                    )
-                )
-            )
-        )
-        ProjectCard(
-            modifier = Modifier.padding(vertical = 20.dp),
-            project = Project(
-                title = "Zelda: Twilight Princess",
-                votes = 123,
-                description = "The best Wii game ever made. Apart from Super Smash Bros.",
-                id = 404,
-                semester = 1,
-                assets = listOf(
-                    URI.create("https://cdn.mobygames.com/screenshots/12341377-among-us-windows-calling-an-emergency-meeting.png"),
-                    URI.create("https://lutris.net/media/games/screenshots/ss_649e19ff657fa518d4c2b45bed7ffdc4264a4b3a.jpg")
-                ),
-                groupMembers = listOf(
-                    Student(
-                        id = 123,
-                        name = "João Pedro",
-                        biography = "Love playing Valorant. Currently thinking of switching courses.",
-                        mood = "Lucky",
-                        avatar = URI.create("https://media.gettyimages.com/photos/cristiano-ronaldo-of-portugal-poses-during-the-official-fifa-world-picture-id450555852?k=6&m=450555852&s=612x612&w=0&h=aUh0DVio_ubpFtCVvMv3WLR1MVPQji1sN5PDNKvHCT4=")
-                    )
-                )
-            )
-        )
-    }
-}

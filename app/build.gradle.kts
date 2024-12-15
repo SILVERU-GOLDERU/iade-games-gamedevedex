@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -35,7 +36,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += "-Xparcelize"
     }
+
     buildFeatures {
         compose = true
     }
@@ -51,6 +54,8 @@ android {
 
 dependencies {
 
+    implementation ("androidx.core:core-ktx:1.12.0")
+    implementation("io.coil-kt:coil-compose:2.6.0") // Replace with the latest version
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -63,6 +68,7 @@ dependencies {
     implementation(libs.fuel)
     implementation(libs.fuel.android)
     implementation(libs.fuel.json)
+    implementation(libs.androidx.foundation.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -70,4 +76,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }
